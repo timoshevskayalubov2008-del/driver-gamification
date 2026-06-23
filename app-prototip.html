@@ -1,0 +1,644 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DriveMaster — прототип приложения</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #0b1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== МАКЕТ ТЕЛЕФОНА ===== */
+        .phone-mockup {
+            background: #101f2f;
+            border-radius: 44px;
+            padding: 18px 14px 22px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 2px #2a4058;
+            max-width: 390px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Динамический островок (Dynamic Island) */
+        .dynamic-island {
+            width: 110px;
+            height: 28px;
+            background: #0a1622;
+            border-radius: 30px;
+            margin: -8px auto 16px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .dynamic-island .cam {
+            width: 8px;
+            height: 8px;
+            background: #1a2f44;
+            border-radius: 50%;
+        }
+        .dynamic-island .sensor {
+            width: 18px;
+            height: 4px;
+            background: #1a2f44;
+            border-radius: 10px;
+        }
+
+        /* ===== ЭКРАН ПРИЛОЖЕНИЯ ===== */
+        .app-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Верхняя панель */
+        .app-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+        }
+        .app-top .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .app-top .user .avatar {
+            width: 44px;
+            height: 44px;
+            background: #2e4b66;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #f6d365;
+        }
+        .app-top .user .name {
+            font-weight: 600;
+            font-size: 18px;
+            color: #e8edf3;
+        }
+        .app-top .user .status {
+            font-size: 12px;
+            color: #8aa4c0;
+        }
+        .app-top .level-badge {
+            background: #f6d365;
+            color: #0b1a2e;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Статистика (мини-карточки) */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .stat-card {
+            background: #1a3147;
+            border-radius: 16px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #2a4058;
+        }
+        .stat-card .number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f6d365;
+        }
+        .stat-card .label {
+            font-size: 11px;
+            color: #8aa4c0;
+            margin-top: 2px;
+        }
+
+        /* Прогресс-бар */
+        .progress-block {
+            background: #1a3147;
+            border-radius: 20px;
+            padding: 16px 18px;
+            border: 1px solid #2a4058;
+        }
+        .progress-block .label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .progress-block .label-row .title {
+            color: #c8d6e5;
+        }
+        .progress-block .label-row .value {
+            color: #f6d365;
+            font-weight: 600;
+        }
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background: #2a4058;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 67%;
+            background: linear-gradient(90deg, #f6d365, #fda085);
+            border-radius: 30px;
+            transition: width 0.4s ease;
+        }
+
+        /* Достижения (горизонтальный скролл) */
+        .section-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .section-label span {
+            font-weight: 600;
+            font-size: 16px;
+            color: #e8edf3;
+        }
+        .section-label a {
+            color: #8aa4c0;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .achievements {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 0 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #f6d365 #1a3147;
+        }
+        .achievements::-webkit-scrollbar {
+            height: 4px;
+        }
+        .achievements::-webkit-scrollbar-thumb {
+            background: #f6d365;
+            border-radius: 10px;
+        }
+        .achievements::-webkit-scrollbar-track {
+            background: #1a3147;
+            border-radius: 10px;
+        }
+
+        .achieve-card {
+            flex: 0 0 110px;
+            background: #1a3147;
+            border-radius: 18px;
+            padding: 14px 8px;
+            text-align: center;
+            border: 1px solid #2a4058;
+            transition: 0.2s;
+        }
+        .achieve-card .icon {
+            font-size: 28px;
+            color: #f6d365;
+            margin-bottom: 4px;
+        }
+        .achieve-card .title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e8edf3;
+        }
+        .achieve-card .sub {
+            font-size: 10px;
+            color: #8aa4c0;
+            margin-top: 2px;
+        }
+        .achieve-card.locked {
+            opacity: 0.5;
+            filter: grayscale(0.7);
+        }
+        .achieve-card.locked .icon {
+            color: #6a7f94;
+        }
+        .achieve-card .progress-ring {
+            width: 100%;
+            height: 4px;
+            background: #2a4058;
+            border-radius: 10px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .achieve-card .progress-ring .ring-fill {
+            height: 100%;
+            background: #f6d365;
+            border-radius: 10px;
+        }
+
+        /* Таблица баллов (инфографика внутри прототипа) */
+        .points-mini {
+            background: #0f2337;
+            border-radius: 18px;
+            padding: 14px 16px;
+            border: 1px solid #29425c;
+        }
+        .points-mini .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .points-mini .header h3 {
+            font-size: 15px;
+            color: #f6d365;
+        }
+        .points-mini .header .more {
+            color: #8aa4c0;
+            font-size: 12px;
+        }
+        .points-mini .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #1e3349;
+            font-size: 13px;
+        }
+        .points-mini .row:last-child {
+            border: none;
+        }
+        .points-mini .row .action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c8d6e5;
+        }
+        .points-mini .row .action i {
+            color: #fda085;
+            width: 18px;
+        }
+        .points-mini .row .price {
+            font-weight: 700;
+            color: #f6d365;
+        }
+
+        /* Магазин поощрений */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .shop-item {
+            background: #1a3147;
+            border-radius: 16px;
+            padding: 12px 6px;
+            text-align: center;
+            border: 1px solid #2a4058;
+            transition: 0.2s;
+            cursor: default;
+        }
+        .shop-item:hover {
+            border-color: #f6d365;
+        }
+        .shop-item .icon {
+            font-size: 24px;
+            color: #fda085;
+        }
+        .shop-item .name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #c8d6e5;
+            margin: 4px 0 2px;
+        }
+        .shop-item .cost {
+            font-size: 12px;
+            color: #f6d365;
+            font-weight: 600;
+        }
+
+        /* Чат-бот-мотиватор (встроенный в прототип) */
+        .chat-bot {
+            background: #0f2337;
+            border-radius: 18px;
+            padding: 14px 16px;
+            border-left: 4px solid #f6d365;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #29425c;
+        }
+        .chat-bot .bot-icon {
+            font-size: 30px;
+            color: #f6d365;
+            flex-shrink: 0;
+        }
+        .chat-bot .msg {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #c8d6e5;
+        }
+        .chat-bot .msg strong {
+            color: #fda085;
+        }
+
+        /* Кнопка действия */
+        .btn-action {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #0b1a2e;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-action:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(253, 160, 133, 0.3);
+        }
+        .btn-action:active {
+            transform: scale(0.97);
+        }
+
+        /* Время в статус-баре */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            color: #8aa4c0;
+            font-size: 13px;
+            padding: 0 4px 4px;
+            font-weight: 500;
+        }
+        .status-bar .time {
+            color: #e8edf3;
+        }
+
+        /* Адаптив */
+        @media (max-width: 420px) {
+            .phone-mockup {
+                border-radius: 32px;
+                padding: 14px 10px 18px;
+            }
+            .shop-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-card .number {
+                font-size: 17px;
+            }
+            .achieve-card {
+                flex: 0 0 90px;
+                padding: 10px 6px;
+            }
+            .achieve-card .icon {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+
+        <!-- Динамический островок -->
+        <div class="dynamic-island">
+            <div class="cam"></div>
+            <div class="sensor"></div>
+        </div>
+
+        <!-- Статус-бар -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+        </div>
+
+        <!-- ===== ЭКРАН ПРИЛОЖЕНИЯ ===== -->
+        <div class="app-screen">
+
+            <!-- Верхняя панель -->
+            <div class="app-top">
+                <div class="user">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div>
+                        <div class="name">Алексей</div>
+                        <div class="status"><i class="fas fa-circle" style="color:#4ade80;font-size:10px;"></i> В рейсе</div>
+                    </div>
+                </div>
+                <div class="level-badge">
+                    <i class="fas fa-star"></i> 12
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="number">1 240</div>
+                    <div class="label">Всего баллов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">8</div>
+                    <div class="label">Достижений</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">№37</div>
+                    <div class="label">В рейтинге</div>
+                </div>
+            </div>
+
+            <!-- Прогресс-бар -->
+            <div class="progress-block">
+                <div class="label-row">
+                    <span class="title">До следующего уровня</span>
+                    <span class="value" id="progressLabel">670 / 1 000</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width:67%"></div>
+                </div>
+            </div>
+
+            <!-- Достижения -->
+            <div>
+                <div class="section-label">
+                    <span><i class="fas fa-trophy" style="color:#f6d365;"></i> Достижения</span>
+                    <a href="#">Все →</a>
+                </div>
+                <div class="achievements">
+                    <div class="achieve-card">
+                        <div class="icon"><i class="fas fa-leaf"></i></div>
+                        <div class="title">ЭкоМастер</div>
+                        <div class="sub">+15% топлива</div>
+                        <div class="progress-ring"><div class="ring-fill" style="width:100%"></div></div>
+                    </div>
+                    <div class="achieve-card">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div class="title">Точность</div>
+                        <div class="sub">до минуты</div>
+                        <div class="progress-ring"><div class="ring-fill" style="width:80%"></div></div>
+                    </div>
+                    <div class="achieve-card locked">
+                        <div class="icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="title">Ас документации</div>
+                        <div class="sub">6/10 ЭТрН</div>
+                        <div class="progress-ring"><div class="ring-fill" style="width:60%"></div></div>
+                    </div>
+                    <div class="achieve-card">
+                        <div class="icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="title">Мастер трассы</div>
+                        <div class="sub">4 200 км</div>
+                        <div class="progress-ring"><div class="ring-fill" style="width:84%"></div></div>
+                    </div>
+                    <div class="achieve-card locked">
+                        <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="title">Неуязвимый</div>
+                        <div class="sub">30 дней без нарушений</div>
+                        <div class="progress-ring"><div class="ring-fill" style="width:40%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Таблица баллов (инфографика) -->
+            <div class="points-mini">
+                <div class="header">
+                    <h3><i class="fas fa-coins"></i> Начисление баллов</h3>
+                    <span class="more"><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="row">
+                    <span class="action"><i class="fas fa-gas-pump"></i> Экономия топлива 5%</span>
+                    <span class="price">+50</span>
+                </div>
+                <div class="row">
+                    <span class="action"><i class="fas fa-file-signature"></i> ЭТрН без ошибок</span>
+                    <span class="price">+30</span>
+                </div>
+                <div class="row">
+                    <span class="action"><i class="fas fa-stopwatch"></i> Прибыл на 10 мин раньше</span>
+                    <span class="price">+20</span>
+                </div>
+                <div class="row">
+                    <span class="action"><i class="fas fa-shield-alt"></i> 0 нарушений за неделю</span>
+                    <span class="price">+40</span>
+                </div>
+            </div>
+
+            <!-- Магазин поощрений -->
+            <div>
+                <div class="section-label">
+                    <span><i class="fas fa-gift" style="color:#f6d365;"></i> Магазин</span>
+                    <span style="color:#f6d365;font-size:14px;font-weight:600;">🪙 420 баллов</span>
+                </div>
+                <div class="shop-grid">
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-coffee"></i></div>
+                        <div class="name">Кофе</div>
+                        <div class="cost">80 🪙</div>
+                    </div>
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-tint"></i></div>
+                        <div class="name">Душ</div>
+                        <div class="cost">120 🪙</div>
+                    </div>
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-wifi"></i></div>
+                        <div class="name">Wi-Fi сутки</div>
+                        <div class="cost">200 🪙</div>
+                    </div>
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-tshirt"></i></div>
+                        <div class="name">Футболка</div>
+                        <div class="cost">350 🪙</div>
+                    </div>
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-utensils"></i></div>
+                        <div class="name">Обед</div>
+                        <div class="cost">150 🪙</div>
+                    </div>
+                    <div class="shop-item">
+                        <div class="icon"><i class="fas fa-charging-station"></i></div>
+                        <div class="name">Зарядка</div>
+                        <div class="cost">60 🪙</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Чат-бот-мотиватор -->
+            <div class="chat-bot" id="chatBot">
+                <div class="bot-icon"><i class="fas fa-robot"></i></div>
+                <div class="msg" id="botMessage">
+                    <strong>Отлично!</strong> Вы сэкономили 5% топлива в этом рейсе. Так держать! 🚛
+                </div>
+            </div>
+
+            <!-- Кнопка симуляции -->
+            <button class="btn-action" onclick="simulateProgress()">
+                <i class="fas fa-plus-circle"></i> Симулировать +30 баллов
+            </button>
+
+        </div><!-- /app-screen -->
+
+    </div><!-- /phone-mockup -->
+
+    <script>
+        function simulateProgress() {
+            const fill = document.getElementById('progressFill');
+            const label = document.getElementById('progressLabel');
+
+            // Парсим текущее значение
+            let current = parseInt(label.textContent.split(' / ')[0].replace(/\s/g, ''));
+            const max = 1000;
+            let newVal = Math.min(current + 30, max);
+            let percent = Math.round((newVal / max) * 100);
+
+            // Обновляем прогресс
+            fill.style.width = percent + '%';
+            label.textContent = newVal.toLocaleString() + ' / 1 000';
+
+            // Меняем сообщение бота
+            const botMsg = document.getElementById('botMessage');
+            const messages = [
+                '<strong>Поздравляем!</strong> Вы получили звание <strong>«ЭкоМастер»</strong>! 🌿',
+                '<strong>Супер!</strong> Осталось всего 2 ЭТрН до звания «Ас документации»! 📄',
+                '🚀 Вы на пути к 13 уровню! Осталось ' + (1000 - newVal).toLocaleString() + ' баллов.',
+                '<strong>Отлично!</strong> Вы сэкономили 5% топлива! +50 баллов',
+                '💪 Вы в топ-50 водителей компании! Продолжайте в том же духе!'
+            ];
+            botMsg.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+
+            // Анимация кнопки
+            const btn = document.querySelector('.btn-action');
+            btn.style.background = 'linear-gradient(135deg, #fda085, #f6d365)';
+            setTimeout(() => {
+                btn.style.background = 'linear-gradient(135deg, #f6d365, #fda085)';
+            }, 300);
+
+            // Вибрация (если на телефоне)
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+    </script>
+
+</body>
+</html>
